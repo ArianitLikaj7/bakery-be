@@ -1,6 +1,7 @@
 package com.example.bakerybe.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,6 +25,6 @@ public class Product extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "bakery_id", insertable = false, updatable = false)
-    @JsonBackReference
+    @JsonManagedReference
     private Bakery bakery;
 }
