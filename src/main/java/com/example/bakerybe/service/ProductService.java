@@ -50,7 +50,7 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public ProductDto productDto(Long id, Map<String, Object> fields) {
+    public ProductDto update(Long id, Map<String, Object> fields) {
         Product productInDb = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         String.format("Product with id %s not found", id)));
