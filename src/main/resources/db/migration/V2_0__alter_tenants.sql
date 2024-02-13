@@ -1,0 +1,1 @@
+alter table tenants add column status varchar default 'ACTIVE';
