@@ -1,6 +1,7 @@
 package com.example.bakerybe.dto;
 
 import com.example.bakerybe.entity.Product;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import java.util.Set;
@@ -15,5 +16,6 @@ public class BakeryDto extends BaseDto{
     private String address;
     private String city;
     private String country;
+    @JsonManagedReference
     private Set<Product> products;
 }

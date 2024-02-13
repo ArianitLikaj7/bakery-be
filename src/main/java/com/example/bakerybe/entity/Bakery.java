@@ -28,7 +28,7 @@ public class Bakery extends BaseEntity {
     @JsonManagedReference
     private Tenant tenant;
 
-    @OneToMany
+    @OneToMany(mappedBy = "bakery")
     @JsonManagedReference
     private Set<Product> products;
 }
