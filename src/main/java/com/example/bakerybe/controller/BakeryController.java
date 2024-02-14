@@ -35,6 +35,11 @@ public class BakeryController {
         return ResponseEntity.ok(bakeryService.getAll());
     }
 
+    @GetMapping("/tenant/{id}")
+    public ResponseEntity<List<BakeryDto>> getByTenant(@PathVariable Long id) {
+        return ResponseEntity.ok(bakeryService.getAllByTenant(id));
+    }
+
     @PutMapping ("/{id}")
     public ResponseEntity<BakeryDto> update(@PathVariable Long id,
                                             @RequestBody Map<String, Object> fields) {

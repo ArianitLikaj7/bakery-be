@@ -53,6 +53,14 @@ public class BakeryService {
                 .collect(Collectors.toList());
     }
 
+    public List<BakeryDto> getAllByTenant(Long tenantId) {
+        List<Bakery> bakeriesByTenantId = bakeryRepository.findByTenantId(tenantId);
+        return bakeriesByTenantId.stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+
     public BakeryDto update(Long id, Map<String, Object> fields) {
         Bakery bakeryInDb = bakeryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
