@@ -43,7 +43,7 @@ public class SecurityConfig {
                                         "/configuration/security",
                                         "/swagger-ui/**",
                                         "/webjars/**",
-                                        "/swagger-ui.html")
+                                        "/swagger-ui.html")  // Corrected path
                                 .permitAll()
                                 .requestMatchers(getNoAuthEndpoints())
                                 .permitAll()
