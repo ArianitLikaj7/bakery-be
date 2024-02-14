@@ -1,12 +1,11 @@
 package com.example.bakerybe.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Set;
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -26,10 +25,10 @@ public class Bakery extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "tenant_id", insertable = false, updatable = false)
+    @JsonManagedReference
     private Tenant tenant;
 
-    @OneToMany(mappedBy = "bakery", fetch = FetchType.LAZY)
-    @JsonIgnoreProperties("bakery")
+    @OneToMany(mappedBy = "bakery", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonBackReference
     private Set<Product> products;
-
 }
