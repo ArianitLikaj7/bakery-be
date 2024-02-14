@@ -1,7 +1,6 @@
 package com.example.bakerybe.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,6 +24,5 @@ public class Product extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "bakery_id", insertable = false, updatable = false)
-    @JsonManagedReference
-    private Bakery bakery;
+    private Bakery bakery; // No need for JsonIgnore, as we want bakery ID when serializing Product
 }
