@@ -18,4 +18,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ExceptionResponseDto exceptionResponse = new ExceptionResponseDto("404", ex.getMessage(), null);
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(ShiftReportAlreadyExistsException.class)
+    protected ResponseEntity<Object> handleShiftReportAlreadyExists(ShiftReportAlreadyExistsException ex) {
+        log.error("Entity not found error: {}", ex.getMessage());
+
+        ExceptionResponseDto exceptionResponse = new ExceptionResponseDto("400", ex.getMessage(), null);
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
 }
