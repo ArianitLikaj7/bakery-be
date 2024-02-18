@@ -10,7 +10,9 @@ import java.time.LocalDate;
 
 public interface ShiftReportRepository extends JpaRepository<ShiftReport, Long> {
 
-    Boolean existsByProductIdAndReportDate(Long productId, LocalDate reportDate);
+    Boolean existsByProductIdAndReportDateAndShift(Long productId,
+                                                   LocalDate reportDate,
+                                                   String shift);
 
     @Query(value = "select * from shift_report" +
             " where bakery_id = :bakeryId" +

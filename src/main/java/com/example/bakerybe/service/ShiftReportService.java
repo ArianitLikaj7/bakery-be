@@ -25,7 +25,9 @@ public class ShiftReportService {
 
     public ShiftReportDto recordShiftStartProduction(ShiftStartProductionReportRequest request){
         LocalDate todayDate = LocalDate.now();
-        Boolean shiftReportExists = shiftReportRepository.existsByProductIdAndReportDate(request.productId(), todayDate);
+        Boolean shiftReportExists = shiftReportRepository.existsByProductIdAndReportDateAndShift(request.productId(),
+                todayDate,
+                request.shift().name());
         if (shiftReportExists){
             throw new ShiftReportAlreadyExistsException(
                     String.format("Shift for product id %s and date %s already exists", request.productId(), todayDate));
