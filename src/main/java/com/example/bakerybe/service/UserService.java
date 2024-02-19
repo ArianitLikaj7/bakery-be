@@ -31,8 +31,6 @@ public class UserService {
     private final TenantRepository tenantRepository;
 
     public UserDto create(UserRequest request){
-        Tenant tenantInDb = tenantRepository.findById(request.tenantId())
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("Tenant with id %s not found", request.tenantId())));
         User user = mapper.toEntity(request);
         setUserPasswordAndRole(request, user);
         User userInDb = userRepository.save(user);
@@ -63,6 +61,6 @@ public class UserService {
 
     private void setUserPasswordAndRole(UserRequest request, User user) {
         user.setPassword(passwordEncoder.encode(request.password()));
-        user.setRole(Role.USER);
+        user.setRole(request.role());
     }
 }
