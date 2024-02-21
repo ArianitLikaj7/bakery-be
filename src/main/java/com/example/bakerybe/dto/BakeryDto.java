@@ -18,5 +18,5 @@ public class BakeryDto extends BaseDto{
     private String city;
     private String country;
     @JsonBackReference
-    private Set<Product> products;
+    private Set<ProductDto> products;
 }

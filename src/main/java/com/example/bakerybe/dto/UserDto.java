@@ -4,6 +4,7 @@ import com.example.bakerybe.entity.Role;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -20,4 +21,6 @@ public class UserDto {
     private String lastName;
     private String email;
     private Role role;
+    private TenantDto tenant;
+    private List<TenantDto> ownerOfTenants;
 }

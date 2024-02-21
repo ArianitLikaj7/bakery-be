@@ -4,6 +4,5 @@ public record BakeryRequest(
         String name,
         String address,
         String city,
-        String country,
-        Long tenantId) {
+        String country) {
 }
