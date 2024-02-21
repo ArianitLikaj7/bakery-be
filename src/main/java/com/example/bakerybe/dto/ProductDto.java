@@ -14,5 +14,4 @@ public class ProductDto extends BaseDto {
     private String description;
     private BigDecimal price;
     private BakeryDto bakery;
-
 }

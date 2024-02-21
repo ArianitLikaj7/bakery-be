@@ -12,6 +12,8 @@ import com.example.bakerybe.mapper.UserMapper;
 import com.example.bakerybe.util.ReflectionUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +30,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper mapper;
     private final PasswordEncoder passwordEncoder;
-    private final TenantRepository tenantRepository;
 
     public UserDto create(UserRequest request){
         User user = mapper.toEntity(request);
@@ -41,6 +42,13 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(String.format("User with id %s not found", id)));
         return mapper.toDto(user);
+    }
+
+    public UserDto getCurrentUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User loggedUser = (User) authentication.getPrincipal();
+
+        return mapper.toDto(loggedUser);
     }
 
     public List<UserDto> getAll(){

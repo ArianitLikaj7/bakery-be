@@ -3,17 +3,21 @@ package com.example.bakerybe.service;
 import com.example.bakerybe.dao.TenantRepository;
 import com.example.bakerybe.dto.TenantDto;
 import com.example.bakerybe.dto.TenantRequest;
+import com.example.bakerybe.dto.UserDto;
 import com.example.bakerybe.entity.EntityStatus;
+import com.example.bakerybe.entity.Role;
 import com.example.bakerybe.entity.Tenant;
 import com.example.bakerybe.exception.ResourceNotFoundException;
 import com.example.bakerybe.mapper.TenantMapper;
 import com.example.bakerybe.util.ReflectionUtil;
+import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,9 +27,11 @@ public class TenantService {
 
     private final TenantRepository tenantRepository;
     private final TenantMapper mapper;
+    private final UserService userService;
 
     public TenantDto create(TenantRequest request){
         Tenant tenant = mapper.toEntity(request);
+        mapTenantOwner(tenant, request.tenantOwnerId());
         tenant.setStatus(EntityStatus.ACTIVE);
         Tenant tenantInDb = tenantRepository.save(tenant);
         return mapper.toDto(tenantInDb);
@@ -52,5 +58,15 @@ public class TenantService {
         });
 
         return mapper.toDto(tenantRepository.save(tenantInDb));
+    }
+
+    private void mapTenantOwner(Tenant tenant, UUID id){
+        UserDto user = userService.getById(id);
+
+        if (!user.getRole().equals(Role.ADMIN)){
+            throw new ValidationException("Tenant Owner must be Admin Role");
+        }
+
+        tenant.setTenantOwnerId(id);
     }
 }
