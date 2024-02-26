@@ -6,14 +6,12 @@ import com.example.bakerybe.entity.ShiftReport;
 import com.example.bakerybe.exception.ResourceNotFoundException;
 import com.example.bakerybe.exception.ShiftReportAlreadyExistsException;
 import com.example.bakerybe.mapper.ShiftReportMapper;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
