@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -43,7 +44,7 @@ public class User implements UserDetails {
     @Column(name = "last_name")
     private String lastName;
 
-    private String email;
+    private String username;
 
     private String password;
 
@@ -52,6 +53,9 @@ public class User implements UserDetails {
 
     @Column(name = "tenant_id")
     private Long tenantId;
+
+    @OneToMany(mappedBy = "tenantOwner", fetch = FetchType.EAGER)
+    private Set<Tenant> ownerOfTenants;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tenant_id", insertable = false, updatable = false)
@@ -65,7 +69,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return username;
     }
 
     @Override

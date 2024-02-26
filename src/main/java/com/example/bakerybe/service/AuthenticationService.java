@@ -25,11 +25,11 @@ public class AuthenticationService {
     public AuthenticationResponse login(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.email(),
+                        request.username(),
                         request.password()
                 )
         );
-        var user = customUserDetailService.loadUserByUsername(request.email());
+        var user = customUserDetailService.loadUserByUsername(request.username());
         return new AuthenticationResponse(jwtService.generateToken(user),
                 jwtService.generateRefreshToken(user),user.getRole());
     }
@@ -58,7 +58,7 @@ public class AuthenticationService {
                 .firstName(loggedUser.getFirstName())
                 .lastName(loggedUser.getLastName())
                 .role(loggedUser.getRole().name())
-                .email(loggedUser.getEmail())
+                .email(loggedUser.getUsername())
                 .build();
     }
 }

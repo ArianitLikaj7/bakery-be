@@ -37,4 +37,10 @@ public class ShiftReportController {
                                                              PageRequest pageRequest){
         return shiftReportService.getAllByBakeryIdAndProductId(bakeryId, productId, pageRequest);
     }
+    @PutMapping("/{id}/update")
+    public ShiftReportDto updateShiftReportQuantities(@PathVariable Long id,
+                                                      @RequestParam Integer producedQuantity,
+                                                      @RequestParam Integer leftQuantity) {
+        return shiftReportService.updateShiftReportQuantities(id, producedQuantity, leftQuantity);
+    }
 }
