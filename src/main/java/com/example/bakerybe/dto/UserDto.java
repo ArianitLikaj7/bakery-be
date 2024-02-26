@@ -19,7 +19,7 @@ public class UserDto {
     private LocalDateTime updatedAt;
     private String firstName;
     private String lastName;
-    private String email;
+    private String username;
     private Role role;
     private TenantDto tenant;
     private List<TenantDto> ownerOfTenants;
