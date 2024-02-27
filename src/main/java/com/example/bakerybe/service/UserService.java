@@ -1,11 +1,8 @@
 package com.example.bakerybe.service;
 
-import com.example.bakerybe.dao.TenantRepository;
 import com.example.bakerybe.dao.UserRepository;
 import com.example.bakerybe.dto.UserDto;
 import com.example.bakerybe.dto.UserRequest;
-import com.example.bakerybe.entity.Role;
-import com.example.bakerybe.entity.Tenant;
 import com.example.bakerybe.entity.User;
 import com.example.bakerybe.exception.ResourceNotFoundException;
 import com.example.bakerybe.mapper.UserMapper;
