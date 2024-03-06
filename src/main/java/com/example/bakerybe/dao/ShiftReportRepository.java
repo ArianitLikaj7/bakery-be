@@ -1,5 +1,6 @@
 package com.example.bakerybe.dao;
 
+import com.example.bakerybe.entity.Shift;
 import com.example.bakerybe.entity.ShiftReport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +15,7 @@ public interface ShiftReportRepository extends JpaRepository<ShiftReport, Long> 
 
     Boolean existsByProductIdAndReportDateAndShift(Long productId,
                                                    LocalDate reportDate,
-                                                   String shift);
+                                                   Shift shift);
 
     @Query(value = "select * from shift_report" +
             " where bakery_id = :bakeryId" +
