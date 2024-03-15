@@ -61,6 +61,12 @@ public class ShiftReportService {
         );
     }
 
+    public Page<ShiftReportDto> getAllShiftsByBakeryId(Long bakeryId, PageRequest pageRequest) {
+        Page<ShiftReport> allShiftsByBakeryId = shiftReportRepository.findAllByBakeryId(bakeryId, pageRequest.getPageable());
+
+        return allShiftsByBakeryId.map(mapper::toDto);
+    }
+
     private static ShiftReport buildShiftReport(ShiftStartProductionReportRequest request, LocalDate todayDate, ProductDto productById) {
         return ShiftReport.builder()
                 .reportDate(todayDate)

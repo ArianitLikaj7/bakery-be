@@ -27,4 +27,7 @@ public interface ShiftReportRepository extends JpaRepository<ShiftReport, Long> 
     Page<ShiftReport> findAllByBakeryIdAndProductId(Long bakeryId,
                                                     Long productId,
                                                     Pageable pageable);
+
+    @Query(value = "SELECT * FROM shift_report s WHERE s.bakery_id = :bakeryId", nativeQuery = true)
+    Page<ShiftReport> findAllByBakeryId(Long bakeryId, Pageable pageable);
 }

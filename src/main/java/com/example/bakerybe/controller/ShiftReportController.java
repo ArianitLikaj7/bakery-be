@@ -7,6 +7,7 @@ import com.example.bakerybe.dto.ShiftStartProductionReportRequest;
 import com.example.bakerybe.service.ShiftReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -36,6 +37,14 @@ public class ShiftReportController {
                                                              @RequestParam Long productId,
                                                              PageRequest pageRequest){
         return shiftReportService.getAllByBakeryIdAndProductId(bakeryId, productId, pageRequest);
+    }
+
+    @GetMapping("/{bakeryId}")
+    public ResponseEntity<Page<ShiftReportDto>> getAllShiftsByBakeryId(@RequestParam Long bakeryId,
+                                                                       PageRequest pageRequest
+    ) {
+        Page<ShiftReportDto> shiftReports = shiftReportService.getAllShiftsByBakeryId(bakeryId, pageRequest);
+        return ResponseEntity.ok(shiftReports);
     }
     @PutMapping("/{id}/update")
     public ShiftReportDto updateShiftReportQuantities(@PathVariable Long id,
