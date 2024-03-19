@@ -40,7 +40,7 @@ public class ShiftReportController {
     }
 
     @GetMapping("/{bakeryId}")
-    public ResponseEntity<Page<ShiftReportDto>> getAllShiftsByBakeryId(@RequestParam Long bakeryId,
+    public ResponseEntity<Page<ShiftReportDto>> getAllShiftsByBakeryId(@PathVariable Long bakeryId,
                                                                        PageRequest pageRequest
     ) {
         Page<ShiftReportDto> shiftReports = shiftReportService.getAllShiftsByBakeryId(bakeryId, pageRequest);
