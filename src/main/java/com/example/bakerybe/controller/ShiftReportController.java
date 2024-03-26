@@ -39,13 +39,13 @@ public class ShiftReportController {
         return shiftReportService.getAllByBakeryIdAndProductId(bakeryId, productId, pageRequest);
     }
 
-    @GetMapping("/{bakeryId}")
+    @GetMapping("/bakery/{bakeryId}")
     public ResponseEntity<Page<ShiftReportDto>> getAllShiftsByBakeryId(@PathVariable Long bakeryId,
-                                                                       PageRequest pageRequest
-    ) {
+                                                                       PageRequest pageRequest) {
         Page<ShiftReportDto> shiftReports = shiftReportService.getAllShiftsByBakeryId(bakeryId, pageRequest);
         return ResponseEntity.ok(shiftReports);
     }
+
     @PutMapping("/{id}/update")
     public ShiftReportDto updateShiftReportQuantities(@PathVariable Long id,
                                                       @RequestParam Integer producedQuantity,
