@@ -48,6 +48,9 @@ public class User implements UserDetails {
 
     private String password;
 
+    @Column(name = "has_branches")
+    private Boolean hasBranches;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 

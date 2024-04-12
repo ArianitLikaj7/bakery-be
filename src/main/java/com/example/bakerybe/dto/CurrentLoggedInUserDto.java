@@ -10,5 +10,6 @@ public record CurrentLoggedInUserDto(
         String firstName,
         String lastName,
         String email,
-        String role) {
+        String role,
+        Boolean hasBranches ) {
 }

@@ -5,12 +5,14 @@ import com.example.bakerybe.dto.BakeryDto;
 import com.example.bakerybe.dto.BakeryRequest;
 import com.example.bakerybe.dto.UserDto;
 import com.example.bakerybe.entity.Bakery;
+import com.example.bakerybe.entity.User;
 import com.example.bakerybe.exception.ResourceNotFoundException;
 import com.example.bakerybe.mapper.BakeryMapper;
 import com.example.bakerybe.util.ReflectionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,6 +28,9 @@ public class BakeryService {
         UserDto currentUser = userService.getCurrentUser();
         Bakery bakery = mapper.toEntity(request);
         bakery.setTenantId(currentUser.getOwnerOfTenants().get(0).getId());
+        Map<String, Object> updateFields = new HashMap<>();
+        updateFields.put("hasBranches", true);
+        userService.update(currentUser.getId(), updateFields);
         Bakery bakeryInDb = bakeryRepository.save(bakery);
         return mapper.toDto(bakeryInDb);
     }

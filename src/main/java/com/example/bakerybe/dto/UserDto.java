@@ -22,5 +22,6 @@ public class UserDto {
     private String username;
     private Role role;
     private TenantDto tenant;
+    private Boolean hasBranches;
     private List<TenantDto> ownerOfTenants;
 }

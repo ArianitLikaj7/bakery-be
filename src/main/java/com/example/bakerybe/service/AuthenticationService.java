@@ -31,7 +31,7 @@ public class AuthenticationService {
         );
         var user = customUserDetailService.loadUserByUsername(request.username());
         return new AuthenticationResponse(jwtService.generateToken(user),
-                jwtService.generateRefreshToken(user),user.getRole());
+                jwtService.generateRefreshToken(user),user.getRole(), user.getHasBranches());
     }
 
     public AuthenticationResponse refreshToken(RefreshTokenRequest request){
@@ -45,7 +45,7 @@ public class AuthenticationService {
         }
 
         String token = jwtService.generateToken(user);
-        return new AuthenticationResponse(token, requestRefreshToken,user.getRole());
+        return new AuthenticationResponse(token, requestRefreshToken,user.getRole(), user.getHasBranches());
     }
 
 
@@ -59,6 +59,7 @@ public class AuthenticationService {
                 .lastName(loggedUser.getLastName())
                 .role(loggedUser.getRole().name())
                 .email(loggedUser.getUsername())
+                .hasBranches(loggedUser.getHasBranches())
                 .build();
     }
 }
