@@ -71,7 +71,7 @@ public class ShiftReportService {
         return ShiftReport.builder()
                 .reportDate(todayDate)
                 .shift(request.shift())
-                .bakeryId(productById.getBakery().getId())
+                .bakeryId(productById.getBakeryId())
                 .productId(productById.getId())
                 .producedQuantity(request.quantityProduced())
                 .build();
