@@ -5,7 +5,6 @@ import com.example.bakerybe.dto.BakeryDto;
 import com.example.bakerybe.dto.BakeryRequest;
 import com.example.bakerybe.dto.UserDto;
 import com.example.bakerybe.entity.Bakery;
-import com.example.bakerybe.entity.User;
 import com.example.bakerybe.exception.ResourceNotFoundException;
 import com.example.bakerybe.mapper.BakeryMapper;
 import com.example.bakerybe.util.ReflectionUtil;
@@ -36,11 +35,17 @@ public class BakeryService {
     }
 
     public BakeryDto getById(Long id) {
+        UserDto currentUser = userService.getCurrentUser();
+        Long tenantId = Long.valueOf(currentUser.getOwnerOfTenants().get(0).getId()); // Assuming tenantId is Long type
+
         Bakery bakery = bakeryRepository.findById(id)
+                .filter(b -> b.getTenantId().equals(tenantId)) // Filter by tenantId
                 .orElseThrow(() -> new ResourceNotFoundException(
-                String.format("Bakery with id %s not found",id)));
+                        String.format("Bakery with id %s not found for the current user", id)));
+
         return mapper.toDto(bakery);
     }
+
 
     public List<BakeryDto> getAll(){
         List<Bakery> bakeries = bakeryRepository.findAll();
@@ -49,12 +54,16 @@ public class BakeryService {
                 .collect(Collectors.toList());
     }
 
-    public List<BakeryDto> getAllByTenant(Long tenantId) {
+    public List<BakeryDto> getAllByTenant() {
+        UserDto currentUser = userService.getCurrentUser();
+        Long tenantId = Long.valueOf(currentUser.getOwnerOfTenants().get(0).getId()); // Assuming tenantId is Long type
+
         List<Bakery> bakeriesByTenantId = bakeryRepository.findByTenantId(tenantId);
         return bakeriesByTenantId.stream()
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
+
 
 
     public BakeryDto update(Long id, Map<String, Object> fields) {

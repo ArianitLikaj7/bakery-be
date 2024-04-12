@@ -35,9 +35,9 @@ public class BakeryController {
         return ResponseEntity.ok(bakeryService.getAll());
     }
 
-    @GetMapping("/tenant/{id}")
-    public ResponseEntity<List<BakeryDto>> getByTenant(@PathVariable Long id) {
-        return ResponseEntity.ok(bakeryService.getAllByTenant(id));
+    @GetMapping("/by-tenant")
+    public ResponseEntity<List<BakeryDto>> getByTenant() {
+        return ResponseEntity.ok(bakeryService.getAllByTenant());
     }
 
     @PutMapping ("/{id}")
