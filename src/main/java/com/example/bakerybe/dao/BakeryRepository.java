@@ -9,5 +9,4 @@ import java.util.Optional;
 public interface BakeryRepository extends JpaRepository<Bakery, Long> {
     List<Bakery> findByTenantId(Long tenantId);
 
-    Optional<Bakery> findByUsername(String username);
 }

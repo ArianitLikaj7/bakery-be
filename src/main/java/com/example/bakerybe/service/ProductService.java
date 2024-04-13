@@ -50,18 +50,6 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public void deleteByBakeryId(Long productId, String username) {
-
-        Bakery bakery = bakeryRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        String.format("Bakery not found for user %s", username)));
-
-        Product product = productRepository.findByIdAndBakery(productId, bakery)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        String.format("Product with id %s not found in bakery of user %s", productId, username)));
-
-        productRepository.delete(product);
-    }
 
     public ProductDto update(Long id, Map<String, Object> fields) {
         Product productInDb = productRepository.findById(id)

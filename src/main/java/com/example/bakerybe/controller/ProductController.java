@@ -40,10 +40,4 @@ public class ProductController {
         return ResponseEntity.ok(productService.update(id, fields));
     }
 
-    @DeleteMapping("/{productId}")
-    public void deleteProduct(@PathVariable Long productId) {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = userDetails.getUsername();
-        productService.deleteByBakeryId(productId, username);
-    }
 }
