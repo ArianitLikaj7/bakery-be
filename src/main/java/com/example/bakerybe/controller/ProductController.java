@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,5 +38,12 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<ProductDto> update(@PathVariable Long id, @RequestBody Map<String, Object> fields){
         return ResponseEntity.ok(productService.update(id, fields));
+    }
+
+    @DeleteMapping("/{productId}")
+    public void deleteProduct(@PathVariable Long productId) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = userDetails.getUsername();
+        productService.deleteByBakeryId(productId, username);
     }
 }
