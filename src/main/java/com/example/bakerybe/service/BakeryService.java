@@ -36,10 +36,10 @@ public class BakeryService {
 
     public BakeryDto getById(Long id) {
         UserDto currentUser = userService.getCurrentUser();
-        Long tenantId = Long.valueOf(currentUser.getOwnerOfTenants().get(0).getId()); // Assuming tenantId is Long type
+        Long tenantId = Long.valueOf(currentUser.getOwnerOfTenants().get(0).getId());
 
         Bakery bakery = bakeryRepository.findById(id)
-                .filter(b -> b.getTenantId().equals(tenantId)) // Filter by tenantId
+                .filter(b -> b.getTenantId().equals(tenantId))
                 .orElseThrow(() -> new ResourceNotFoundException(
                         String.format("Bakery with id %s not found for the current user", id)));
 
@@ -63,8 +63,6 @@ public class BakeryService {
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
-
-
 
     public BakeryDto update(Long id, Map<String, Object> fields) {
         Bakery bakeryInDb = bakeryRepository.findById(id)

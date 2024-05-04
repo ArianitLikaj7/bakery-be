@@ -1,0 +1,3 @@
+ALTER TABLE users
+    ADD COLUMN bakery_id BIGINT,
+ADD COLUMN user_type VARCHAR(255);

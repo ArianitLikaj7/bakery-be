@@ -1,8 +1,10 @@
 package com.example.bakerybe.service;
 
+import com.example.bakerybe.dao.CustomUserRepository;
 import com.example.bakerybe.dao.UserRepository;
 import com.example.bakerybe.dto.UserDto;
 import com.example.bakerybe.dto.UserRequest;
+import com.example.bakerybe.entity.CustomUser;
 import com.example.bakerybe.entity.User;
 import com.example.bakerybe.exception.ResourceNotFoundException;
 import com.example.bakerybe.mapper.UserMapper;
@@ -26,6 +28,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper mapper;
+    private final CustomUserRepository customUserRepository;
     private final PasswordEncoder passwordEncoder;
 
     public UserDto create(UserRequest request){
@@ -63,7 +66,9 @@ public class UserService {
         });
         return mapper.toDto(userRepository.save(userInDb));
     }
-
+    public List<CustomUser> getCustomUsersByBakeryId(Long bakeryId) {
+        return customUserRepository.findByBakeryId(bakeryId);
+    }
     private void setUserPasswordAndRole(UserRequest request, User user) {
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setRole(request.role());
