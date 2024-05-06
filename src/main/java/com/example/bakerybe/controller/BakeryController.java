@@ -45,4 +45,9 @@ public class BakeryController {
                                             @RequestBody Map<String, Object> fields) {
         return ResponseEntity.ok(bakeryService.update(id, fields));
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable Long id){
+        bakeryService.deleteById(id);
+    }
 }

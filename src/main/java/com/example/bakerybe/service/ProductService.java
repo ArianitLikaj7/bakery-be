@@ -60,4 +60,8 @@ public class ProductService {
         });
         return mapper.toDto(productInDb);
     }
+
+    public void deleteById(Long id){
+        productRepository.deleteById(id);
+    }
 }

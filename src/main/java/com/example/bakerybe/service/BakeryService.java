@@ -73,4 +73,8 @@ public class BakeryService {
         });
       return mapper.toDto(bakeryRepository.save(bakeryInDb));
     }
+
+    public void deleteById(Long id){
+        bakeryRepository.deleteById(id);
+    }
 }

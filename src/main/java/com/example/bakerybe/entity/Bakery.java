@@ -28,7 +28,7 @@ public class Bakery extends BaseEntity {
     @JsonManagedReference
     private Tenant tenant;
 
-    @OneToMany(mappedBy = "bakery", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "bakery", cascade = CascadeType.ALL)
     @JsonBackReference
     private Set<Product> products;
 }

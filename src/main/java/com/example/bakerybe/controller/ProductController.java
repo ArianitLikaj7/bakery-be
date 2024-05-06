@@ -5,6 +5,7 @@ import com.example.bakerybe.dto.ProductRequest;
 import com.example.bakerybe.service.ProductService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,4 +41,8 @@ public class ProductController {
         return ResponseEntity.ok(productService.update(id, fields));
     }
 
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable Long id){
+        productService.deleteById(id);
+    }
 }
