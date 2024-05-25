@@ -19,6 +19,7 @@ public class CustomUserDto {
         private String firstName;
         private String lastName;
         private String username;
+        private String createdBy;
         private Role role;
         private Long bakeryId;
 }

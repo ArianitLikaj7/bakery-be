@@ -56,8 +56,7 @@ public class BakeryService {
 
     public List<BakeryDto> getAllByTenant() {
         UserDto currentUser = userService.getCurrentUser();
-        Long tenantId = Long.valueOf(currentUser.getOwnerOfTenants().get(0).getId()); // Assuming tenantId is Long type
-
+        Long tenantId = Long.valueOf(currentUser.getOwnerOfTenants().get(0).getId());
         List<Bakery> bakeriesByTenantId = bakeryRepository.findByTenantId(tenantId);
         return bakeriesByTenantId.stream()
                 .map(mapper::toDto)
