@@ -5,6 +5,7 @@ import com.example.bakerybe.dto.AuthenticationRequest;
 import com.example.bakerybe.dto.AuthenticationResponse;
 import com.example.bakerybe.dto.CurrentLoggedInUserDto;
 import com.example.bakerybe.dto.RefreshTokenRequest;
+import com.example.bakerybe.entity.CustomUser;
 import com.example.bakerybe.entity.User;
 import com.example.bakerybe.exception.TokenRefreshException;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +53,7 @@ public class AuthenticationService {
     public CurrentLoggedInUserDto getLoggedInUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User loggedUser = (User) authentication.getPrincipal();
+        CustomUser loggedCustomUser = (CustomUser) authentication.getPrincipal();
 
         return CurrentLoggedInUserDto.builder()
                 .userId(loggedUser.getId())
@@ -60,6 +62,7 @@ public class AuthenticationService {
                 .role(loggedUser.getRole().name())
                 .email(loggedUser.getUsername())
                 .hasBranches(loggedUser.getHasBranches())
+                .bakeryId(loggedCustomUser.getBakeryId())
                 .build();
     }
 }
