@@ -50,10 +50,15 @@ public class AuthenticationService {
     }
 
 
-    public CurrentLoggedInUserDto getLoggedInUser(){
+    public CurrentLoggedInUserDto getLoggedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User loggedUser = (User) authentication.getPrincipal();
         CustomUser loggedCustomUser = (CustomUser) authentication.getPrincipal();
+
+        Long bakeryId = null;
+        if (loggedCustomUser instanceof CustomUser) {
+            bakeryId = loggedCustomUser.getBakeryId();
+        }
 
         return CurrentLoggedInUserDto.builder()
                 .userId(loggedUser.getId())
@@ -62,7 +67,8 @@ public class AuthenticationService {
                 .role(loggedUser.getRole().name())
                 .email(loggedUser.getUsername())
                 .hasBranches(loggedUser.getHasBranches())
-                .bakeryId(loggedCustomUser.getBakeryId())
+                .bakeryId(bakeryId) // Set bakeryId based on the condition
                 .build();
     }
+
 }
