@@ -11,5 +11,5 @@ public record CurrentLoggedInUserDto(
         String lastName,
         String email,
         String role,
-        Boolean hasBranches) {
+        Boolean hasBranches) implements CurrentLoggedIn {
 }

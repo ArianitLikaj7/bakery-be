@@ -1,10 +1,7 @@
 package com.example.bakerybe.service;
 
 import com.example.bakerybe.config.JwtService;
-import com.example.bakerybe.dto.AuthenticationRequest;
-import com.example.bakerybe.dto.AuthenticationResponse;
-import com.example.bakerybe.dto.CurrentLoggedInUserDto;
-import com.example.bakerybe.dto.RefreshTokenRequest;
+import com.example.bakerybe.dto.*;
 import com.example.bakerybe.entity.CustomUser;
 import com.example.bakerybe.entity.User;
 import com.example.bakerybe.exception.TokenRefreshException;
@@ -35,19 +32,17 @@ public class AuthenticationService {
                 jwtService.generateRefreshToken(user),user.getRole(), user.getHasBranches());
     }
 
-    public AuthenticationResponse refreshToken(RefreshTokenRequest request){
-        String requestRefreshToken = request.token();
+    public CurrentLoggedIn getCurrentLoggedInUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User loggedUser = (User) authentication.getPrincipal();
 
-        User user = customUserDetailService.
-                loadUserByUsername(jwtService.extractUsername(requestRefreshToken));
-
-        if (!jwtService.isTokenValid(requestRefreshToken, user)){
-            throw new TokenRefreshException("Refresh token was expired. Please make a new sign-in request");
+        if (loggedUser instanceof CustomUser) {
+            return getLoggedInUserDtoForCustomerUser((CustomUser) loggedUser);
+        } else {
+            return getLoggedInUserDtoForUser(loggedUser);
         }
-
-        String token = jwtService.generateToken(user);
-        return new AuthenticationResponse(token, requestRefreshToken,user.getRole(), user.getHasBranches());
     }
+
 
 
     public CurrentLoggedInUserDto getLoggedInUser() {
@@ -64,6 +59,30 @@ public class AuthenticationService {
 
         return builder.build();
     }
+
+    public CurrentLoggedInUserDto getLoggedInUserDtoForUser(User user) {
+        return CurrentLoggedInUserDto.builder()
+                .userId(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .role(user.getRole().name())
+                .email(user.getUsername())
+                .hasBranches(user.getHasBranches())
+                .build();
+    }
+
+    public CurrentLoggedInCustomUserDto getLoggedInUserDtoForCustomerUser(CustomUser customerUser) {
+        return CurrentLoggedInCustomUserDto.builder()
+                .userId(customerUser.getId())
+                .firstName(customerUser.getFirstName())
+                .lastName(customerUser.getLastName())
+                .role(customerUser.getRole().name())
+                .email(customerUser.getUsername())
+                .hasBranches(customerUser.getHasBranches())
+                .bakeryId(customerUser.getBakeryId())
+                .build();
+    }
+
 
 
 }
