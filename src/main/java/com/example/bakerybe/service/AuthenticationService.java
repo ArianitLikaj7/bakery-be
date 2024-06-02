@@ -53,7 +53,6 @@ public class AuthenticationService {
     public CurrentLoggedInUserDto getLoggedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User loggedUser = (User) authentication.getPrincipal();
-        CustomUser loggedCustomUser = (CustomUser) authentication.getPrincipal();
 
         CurrentLoggedInUserDto.CurrentLoggedInUserDtoBuilder builder = CurrentLoggedInUserDto.builder()
                 .userId(loggedUser.getId())
@@ -62,10 +61,6 @@ public class AuthenticationService {
                 .role(loggedUser.getRole().name())
                 .email(loggedUser.getUsername())
                 .hasBranches(loggedUser.getHasBranches());
-
-        if (loggedCustomUser instanceof CustomUser) {
-            builder.bakeryId(loggedCustomUser.getBakeryId());
-        }
 
         return builder.build();
     }

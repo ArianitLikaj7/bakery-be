@@ -11,6 +11,5 @@ public record CurrentLoggedInUserDto(
         String lastName,
         String email,
         String role,
-        Boolean hasBranches,
-        Long bakeryId) {
+        Boolean hasBranches) {
 }
