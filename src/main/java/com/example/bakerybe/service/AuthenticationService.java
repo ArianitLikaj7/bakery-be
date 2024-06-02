@@ -55,20 +55,20 @@ public class AuthenticationService {
         User loggedUser = (User) authentication.getPrincipal();
         CustomUser loggedCustomUser = (CustomUser) authentication.getPrincipal();
 
-        Long bakeryId = null;
-        if (loggedCustomUser instanceof CustomUser) {
-            bakeryId = loggedCustomUser.getBakeryId();
-        }
-
-        return CurrentLoggedInUserDto.builder()
+        CurrentLoggedInUserDto.CurrentLoggedInUserDtoBuilder builder = CurrentLoggedInUserDto.builder()
                 .userId(loggedUser.getId())
                 .firstName(loggedUser.getFirstName())
                 .lastName(loggedUser.getLastName())
                 .role(loggedUser.getRole().name())
                 .email(loggedUser.getUsername())
-                .hasBranches(loggedUser.getHasBranches())
-                .bakeryId(bakeryId) // Set bakeryId based on the condition
-                .build();
+                .hasBranches(loggedUser.getHasBranches());
+
+        if (loggedCustomUser instanceof CustomUser) {
+            builder.bakeryId(loggedCustomUser.getBakeryId());
+        }
+
+        return builder.build();
     }
+
 
 }
