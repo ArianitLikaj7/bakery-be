@@ -32,6 +32,21 @@ public class AuthenticationService {
                 jwtService.generateRefreshToken(user),user.getRole(), user.getHasBranches());
     }
 
+    public AuthenticationResponse refreshToken(RefreshTokenRequest request){
+        String requestRefreshToken = request.token();
+
+        User user = customUserDetailService.
+                loadUserByUsername(jwtService.extractUsername(requestRefreshToken));
+
+        if (!jwtService.isTokenValid(requestRefreshToken, user)){
+            throw new TokenRefreshException("Refresh token was expired. Please make a new sign-in request");
+        }
+
+        String token = jwtService.generateToken(user);
+        return new AuthenticationResponse(token, requestRefreshToken,user.getRole(), user.getHasBranches());
+    }
+
+
     public CurrentLoggedIn getCurrentLoggedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User loggedUser = (User) authentication.getPrincipal();
@@ -82,7 +97,4 @@ public class AuthenticationService {
                 .bakeryId(customerUser.getBakeryId())
                 .build();
     }
-
-
-
 }
