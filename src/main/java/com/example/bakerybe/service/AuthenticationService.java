@@ -52,28 +52,12 @@ public class AuthenticationService {
         User loggedUser = (User) authentication.getPrincipal();
 
         if (loggedUser instanceof CustomUser) {
-            return getLoggedInUserDtoForCustomerUser((CustomUser) loggedUser);
+            return getLoggedInUserDtoForCustomUser((CustomUser) loggedUser);
         } else {
             return getLoggedInUserDtoForUser(loggedUser);
         }
     }
 
-
-
-    public CurrentLoggedInUserDto getLoggedInUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User loggedUser = (User) authentication.getPrincipal();
-
-        CurrentLoggedInUserDto.CurrentLoggedInUserDtoBuilder builder = CurrentLoggedInUserDto.builder()
-                .userId(loggedUser.getId())
-                .firstName(loggedUser.getFirstName())
-                .lastName(loggedUser.getLastName())
-                .role(loggedUser.getRole().name())
-                .email(loggedUser.getUsername())
-                .hasBranches(loggedUser.getHasBranches());
-
-        return builder.build();
-    }
 
     public CurrentLoggedInUserDto getLoggedInUserDtoForUser(User user) {
         return CurrentLoggedInUserDto.builder()
@@ -86,15 +70,14 @@ public class AuthenticationService {
                 .build();
     }
 
-    public CurrentLoggedInCustomUserDto getLoggedInUserDtoForCustomerUser(CustomUser customerUser) {
+    public CurrentLoggedInCustomUserDto getLoggedInUserDtoForCustomUser(CustomUser customUser) {
         return CurrentLoggedInCustomUserDto.builder()
-                .userId(customerUser.getId())
-                .firstName(customerUser.getFirstName())
-                .lastName(customerUser.getLastName())
-                .role(customerUser.getRole().name())
-                .email(customerUser.getUsername())
-                .hasBranches(customerUser.getHasBranches())
-                .bakeryId(customerUser.getBakeryId())
+                .userId(customUser.getId())
+                .firstName(customUser.getFirstName())
+                .lastName(customUser.getLastName())
+                .role(customUser.getRole().name())
+                .email(customUser.getUsername())
+                .bakeryId(customUser.getBakeryId())
                 .build();
     }
 }
