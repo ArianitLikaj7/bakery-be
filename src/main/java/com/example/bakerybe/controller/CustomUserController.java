@@ -3,6 +3,7 @@ package com.example.bakerybe.controller;
 import com.example.bakerybe.dao.CustomUserRepository;
 import com.example.bakerybe.dto.CustomUserDto;
 import com.example.bakerybe.dto.CustomUserRequest;
+import com.example.bakerybe.dto.ProductDto;
 import com.example.bakerybe.dto.UserDto;
 import com.example.bakerybe.service.CustomUserService;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,12 @@ public class CustomUserController {
     @PutMapping("/{id}")
     public ResponseEntity<CustomUserDto> update(@PathVariable Long id, @RequestBody Map<String, Object> fields) {
         return ResponseEntity.ok(customUserService.update(id,fields));
+    }
+
+    @GetMapping("/products")
+    public ResponseEntity<List<ProductDto>> getProductsForCurrentUser() {
+        List<ProductDto> products = customUserService.getProducts();
+        return ResponseEntity.ok(products);
     }
 
 }

@@ -50,6 +50,12 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+    public List<ProductDto> getProductsByBakeryId(Long id){
+        List<Product> products = productRepository.findProductsByBakeryId(id);
+        return products.stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
+    }
 
     public ProductDto update(Long id, Map<String, Object> fields) {
         Product productInDb = productRepository.findById(id)

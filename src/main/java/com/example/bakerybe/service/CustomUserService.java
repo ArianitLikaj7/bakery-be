@@ -1,12 +1,8 @@
 package com.example.bakerybe.service;
 
 import com.example.bakerybe.dao.CustomUserRepository;
-import com.example.bakerybe.dto.CustomUserDto;
-import com.example.bakerybe.dto.CustomUserRequest;
-import com.example.bakerybe.dto.UserDto;
-import com.example.bakerybe.dto.UserRequest;
+import com.example.bakerybe.dto.*;
 import com.example.bakerybe.entity.CustomUser;
-import com.example.bakerybe.entity.User;
 import com.example.bakerybe.exception.ResourceNotFoundException;
 import com.example.bakerybe.mapper.CustomUserMapper;
 import com.example.bakerybe.util.ReflectionUtil;
@@ -18,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,6 +24,7 @@ public class CustomUserService {
     private final CustomUserMapper mapper;
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
+    private final ProductService productService;
 
     public CustomUserDto create(CustomUserRequest request){
         CustomUser customUser = mapper.toEntity(request);
@@ -39,6 +35,11 @@ public class CustomUserService {
         return mapper.toDto(userInDb);
     }
 
+    public List<ProductDto> getProducts(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+        return productService.getProductsByBakeryId(customUser.getBakeryId());
+    }
     public CustomUserDto getById(Long id){
         CustomUser user = repository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(String.format("CustomUser with id %s not found", id)));
@@ -57,6 +58,7 @@ public class CustomUserService {
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
+
 
     public CustomUserDto update(Long id, Map<String, Object> fields){
         CustomUser userInDb = repository.findById(id)
