@@ -33,10 +33,11 @@ public class ShiftReportController {
     }
 
     @GetMapping("/filter")
-    public Page<ShiftReportDto> getAllByBakeryIdAndProductId(@RequestParam Long bakeryId,
-                                                             @RequestParam Long productId,
-                                                             PageRequest pageRequest){
-        return shiftReportService.getAllByBakeryIdAndProductId(bakeryId, productId, pageRequest);
+    public Page<ShiftReportDto> getAllByBakeryIdAndProductIdAndShiftId(@RequestParam Long bakeryId,
+                                                                       @RequestParam Long productId,
+                                                                       @RequestParam Long shiftId,
+                                                                       PageRequest pageRequest) {
+        return shiftReportService.getAllByBakeryIdAndProductIdAndShiftId(bakeryId, productId, shiftId, pageRequest);
     }
 
     @GetMapping("/bakery/{bakeryId}")

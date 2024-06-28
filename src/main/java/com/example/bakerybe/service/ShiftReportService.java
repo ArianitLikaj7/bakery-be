@@ -53,13 +53,14 @@ public class ShiftReportService {
         return mapper.toDto(byId(id));
     }
 
-    public Page<ShiftReportDto> getAllByBakeryIdAndProductId(Long bakeryId, Long productId, PageRequest pageRequest){
-        Page<ShiftReport> allByBakeryIdAndProductId = shiftReportRepository.findAllByBakeryIdAndProductId(bakeryId, productId, pageRequest.getPageable());
+    public Page<ShiftReportDto> getAllByBakeryIdAndProductIdAndShiftId(Long bakeryId, Long productId, Long shiftId, PageRequest pageRequest) {
+        Page<ShiftReport> allByBakeryIdAndProductIdAndShiftId = shiftReportRepository.findAllByBakeryIdAndProductIdAndShiftId(bakeryId, productId, shiftId, pageRequest.getPageable());
 
-        return allByBakeryIdAndProductId.map(
+        return allByBakeryIdAndProductIdAndShiftId.map(
                 mapper::toDto
         );
     }
+
 
     public Page<ShiftReportDto> getAllShiftsByBakeryId(Long bakeryId, PageRequest pageRequest) {
         Page<ShiftReport> allShiftsByBakeryId = shiftReportRepository.findAllByBakeryId(bakeryId, pageRequest.getPageable());

@@ -19,14 +19,18 @@ public interface ShiftReportRepository extends JpaRepository<ShiftReport, Long> 
 
     @Query(value = "select * from shift_report" +
             " where bakery_id = :bakeryId" +
-            " and product_id = :productId",
+            " and product_id = :productId" +
+            " and shift_id = :shiftId",
             countQuery = "select * from shift_report" +
                     " where bakery_id = :bakeryId" +
-                    " and product_id = :productId",
+                    " and product_id = :productId" +
+                    " and shift_id = :shiftId",
             nativeQuery = true)
-    Page<ShiftReport> findAllByBakeryIdAndProductId(Long bakeryId,
-                                                    Long productId,
-                                                    Pageable pageable);
+    Page<ShiftReport> findAllByBakeryIdAndProductIdAndShiftId(Long bakeryId,
+                                                              Long productId,
+                                                              Long shiftId,
+                                                              Pageable pageable);
+
 
     @Query(value = "SELECT * FROM shift_report s WHERE s.bakery_id = :bakeryId", nativeQuery = true)
     Page<ShiftReport> findAllByBakeryId(Long bakeryId, Pageable pageable);
