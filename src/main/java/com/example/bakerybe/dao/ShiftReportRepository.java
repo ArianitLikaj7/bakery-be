@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public interface ShiftReportRepository extends JpaRepository<ShiftReport, Long> {
 
@@ -20,16 +21,11 @@ public interface ShiftReportRepository extends JpaRepository<ShiftReport, Long> 
     @Query(value = "select * from shift_report" +
             " where bakery_id = :bakeryId" +
             " and product_id = :productId" +
-            " and shift_id = :shiftId",
-            countQuery = "select * from shift_report" +
-                    " where bakery_id = :bakeryId" +
-                    " and product_id = :productId" +
-                    " and shift_id = :shiftId",
+            " and shift = :shiftId",
             nativeQuery = true)
-    Page<ShiftReport> findAllByBakeryIdAndProductIdAndShiftId(Long bakeryId,
+    List<ShiftReport> findAllByBakeryIdAndProductIdAndShiftId(Long bakeryId,
                                                               Long productId,
-                                                              Long shiftId,
-                                                              Pageable pageable);
+                                                              String shiftId);
 
 
     @Query(value = "SELECT * FROM shift_report s WHERE s.bakery_id = :bakeryId", nativeQuery = true)

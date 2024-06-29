@@ -8,7 +8,10 @@ import com.example.bakerybe.service.ShiftReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/shift-reports")
@@ -33,11 +36,10 @@ public class ShiftReportController {
     }
 
     @GetMapping("/filter")
-    public Page<ShiftReportDto> getAllByBakeryIdAndProductIdAndShiftId(@RequestParam Long bakeryId,
+    public List<ShiftReportDto> getAllByBakeryIdAndProductIdAndShiftId(@RequestParam Long bakeryId,
                                                                        @RequestParam Long productId,
-                                                                       @RequestParam Long shiftId,
-                                                                       PageRequest pageRequest) {
-        return shiftReportService.getAllByBakeryIdAndProductIdAndShiftId(bakeryId, productId, shiftId, pageRequest);
+                                                                       @RequestParam String shiftId) {
+        return shiftReportService.getAllByBakeryIdAndProductIdAndShiftId(bakeryId, productId, shiftId);
     }
 
     @GetMapping("/bakery/{bakeryId}")

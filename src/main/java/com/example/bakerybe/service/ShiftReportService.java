@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -53,12 +55,12 @@ public class ShiftReportService {
         return mapper.toDto(byId(id));
     }
 
-    public Page<ShiftReportDto> getAllByBakeryIdAndProductIdAndShiftId(Long bakeryId, Long productId, Long shiftId, PageRequest pageRequest) {
-        Page<ShiftReport> allByBakeryIdAndProductIdAndShiftId = shiftReportRepository.findAllByBakeryIdAndProductIdAndShiftId(bakeryId, productId, shiftId, pageRequest.getPageable());
+    public List<ShiftReportDto> getAllByBakeryIdAndProductIdAndShiftId(Long bakeryId, Long productId, String shiftId) {
+        List<ShiftReport> allByBakeryIdAndProductIdAndShiftId = shiftReportRepository.findAllByBakeryIdAndProductIdAndShiftId(bakeryId, productId, shiftId);
 
-        return allByBakeryIdAndProductIdAndShiftId.map(
-                mapper::toDto
-        );
+        return allByBakeryIdAndProductIdAndShiftId.stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
     }
 
 
