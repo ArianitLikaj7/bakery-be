@@ -49,15 +49,17 @@ public class TenantService {
                 .collect(Collectors.toList());
     }
 
-    public TenantDto update(Long id, Map<String, Object> fields){
+    public TenantDto update(Long id, TenantRequest updatedTenant) {
         Tenant tenantInDb = tenantRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("Tenant with id %s not found", id)));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format("Tenant with id %s not found", id)));
 
-        fields.forEach((key, value) -> {
-            ReflectionUtil.setFieldValue(tenantInDb, key, value);
-        });
+        tenantInDb.setBusinessName(updatedTenant.businessName());
+        tenantInDb.setIdentificationNumber(updatedTenant.identificationNumber());
+        tenantInDb.setTenantOwnerId(updatedTenant.tenantOwnerId());
 
-        return mapper.toDto(tenantRepository.save(tenantInDb));
+        tenantRepository.save(tenantInDb);
+        return mapper.toDto(tenantInDb);
     }
 
     private void mapTenantOwner(Tenant tenant, UUID id){

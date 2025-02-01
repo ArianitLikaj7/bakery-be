@@ -40,7 +40,7 @@ public class BakeryService {
         try {
             Map<String, Object> updateFields = new HashMap<>();
             updateFields.put("hasBranches", true);
-            userService.update(currentUser.getId(), updateFields);
+            userService.updateUserOnlyForBakery(currentUser.getId(), updateFields);
         } catch (Exception e) {
             log.error("Failed to update user with ID: {}", currentUser.getId(), e);
             throw e; // rethrow or handle as needed
@@ -80,14 +80,17 @@ public class BakeryService {
                 .collect(Collectors.toList());
     }
 
-    public BakeryDto update(Long id, Map<String, Object> fields) {
+    public BakeryDto update(Long id, BakeryRequest updatedBakery) {
         Bakery bakeryInDb = bakeryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        String.format("Bakery with id %s not found",id)));
-      fields.forEach((key, value) -> {
-           ReflectionUtil.setFieldValue(bakeryInDb,key, value);
-        });
-      return mapper.toDto(bakeryRepository.save(bakeryInDb));
+                        String.format("Bakery with id %s not found", id)));
+
+
+        bakeryInDb.setName(updatedBakery.name());
+        bakeryInDb.setAddress(updatedBakery.address());
+        bakeryInDb.setCity(updatedBakery.city());
+        bakeryInDb.setCountry(updatedBakery.country());
+        return mapper.toDto(bakeryRepository.save(bakeryInDb));
     }
 
     public void deleteById(Long id){

@@ -36,7 +36,7 @@ public class TenantController {
 
     @PutMapping("/{id}")
     public ResponseEntity<TenantDto> update(@PathVariable Long id,
-                                            @RequestBody Map<String, Object> fields){
-        return ResponseEntity.ok(tenantService.update(id, fields));
+                                            @RequestBody TenantRequest tenantRequest){
+        return ResponseEntity.ok(tenantService.update(id, tenantRequest));
     }
 }

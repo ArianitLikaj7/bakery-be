@@ -58,30 +58,20 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public ProductDto update(Long id, Map<String, Object> fields) {
+    public ProductDto update(Long id, ProductRequest updatedProduct) {
         Product productInDb = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         String.format("Product with id %s not found", id)));
 
-        if (fields.containsKey("name")) {
-            productInDb.setName((String) fields.get("name"));
-        }
-        if (fields.containsKey("description")) {
-            productInDb.setDescription((String) fields.get("description"));
-        }
-        if (fields.containsKey("price")) {
-            String priceStr = (String) fields.get("price");
-            BigDecimal price = new BigDecimal(priceStr);
-            productInDb.setPrice(price);
-        }
-        if (fields.containsKey("bakeryId")) {
-            productInDb.setBakeryId((Long) fields.get("bakeryId"));
-        }
+        productInDb.setName(updatedProduct.name());
+        productInDb.setDescription(updatedProduct.description());
+        productInDb.setPrice(updatedProduct.price());
+        productInDb.setBakeryId(updatedProduct.bakeryId());
 
         productRepository.save(productInDb);
-
         return mapper.toDto(productInDb);
     }
+
 
 
     public void deleteById(Long id){

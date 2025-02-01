@@ -2,6 +2,7 @@ package com.example.bakerybe.controller;
 
 import com.example.bakerybe.dto.BakeryDto;
 import com.example.bakerybe.dto.BakeryRequest;
+import com.example.bakerybe.dto.ProductRequest;
 import com.example.bakerybe.service.BakeryService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -42,8 +43,8 @@ public class BakeryController {
 
     @PutMapping ("/{id}")
     public ResponseEntity<BakeryDto> update(@PathVariable Long id,
-                                            @RequestBody Map<String, Object> fields) {
-        return ResponseEntity.ok(bakeryService.update(id, fields));
+                                            @RequestBody BakeryRequest bakeryRequest) {
+        return ResponseEntity.ok(bakeryService.update(id, bakeryRequest));
     }
 
     @DeleteMapping("/{id}")

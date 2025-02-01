@@ -59,7 +59,24 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public UserDto update(UUID id, Map<String, Object> fields){
+    public UserDto update(UUID id, UserRequest updatedUser) {
+        User userInDb = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format("User with id %s not found", id)));
+
+        userInDb.setFirstName(updatedUser.firstName());
+        userInDb.setLastName(updatedUser.lastName());
+        userInDb.setUsername(updatedUser.username());
+        userInDb.setPassword(updatedUser.password());
+        userInDb.setRole(updatedUser.role());
+        userInDb.setTenantId(updatedUser.tenantId());
+
+        userRepository.save(userInDb);
+
+        return mapper.toDto(userInDb);
+    }
+
+    public UserDto updateUserOnlyForBakery(UUID id, Map<String, Object> fields){
         User userInDb = userRepository.findById(id)
                 .orElseThrow( () -> new ResourceNotFoundException(String.format("User with id %s not found", id)));
         fields.forEach((key, value) ->{
