@@ -13,6 +13,7 @@ import com.example.bakerybe.util.ReflectionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -61,11 +62,27 @@ public class ProductService {
         Product productInDb = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         String.format("Product with id %s not found", id)));
-        fields.forEach((key, value)-> {
-            ReflectionUtil.setFieldValue(productInDb,key,value);
-        });
+
+        if (fields.containsKey("name")) {
+            productInDb.setName((String) fields.get("name"));
+        }
+        if (fields.containsKey("description")) {
+            productInDb.setDescription((String) fields.get("description"));
+        }
+        if (fields.containsKey("price")) {
+            String priceStr = (String) fields.get("price");
+            BigDecimal price = new BigDecimal(priceStr);
+            productInDb.setPrice(price);
+        }
+        if (fields.containsKey("bakeryId")) {
+            productInDb.setBakeryId((Long) fields.get("bakeryId"));
+        }
+
+        productRepository.save(productInDb);
+
         return mapper.toDto(productInDb);
     }
+
 
     public void deleteById(Long id){
         productRepository.deleteById(id);
