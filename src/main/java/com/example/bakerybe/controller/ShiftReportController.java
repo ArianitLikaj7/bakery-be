@@ -1,9 +1,9 @@
 package com.example.bakerybe.controller;
 
-import com.example.bakerybe.dto.PageRequest;
-import com.example.bakerybe.dto.ShiftEndInventoryReportRequest;
-import com.example.bakerybe.dto.ShiftReportDto;
-import com.example.bakerybe.dto.ShiftStartProductionReportRequest;
+import com.example.bakerybe.dto.*;
+import com.example.bakerybe.entity.Shift;
+import com.example.bakerybe.entity.ShiftReport;
+import com.example.bakerybe.entity.ShiftReportSummary;
 import com.example.bakerybe.service.ShiftReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,38 +21,25 @@ public class ShiftReportController {
     private final ShiftReportService shiftReportService;
 
     @PostMapping("/start")
-    public ShiftReportDto recordShiftStartProduction(@RequestBody ShiftStartProductionReportRequest request){
-        return shiftReportService.recordShiftStartProduction(request);
+    public ResponseEntity<ShiftReport> startShift(@RequestParam Long bakeryId, @RequestParam Shift shift) {
+        ShiftReport shiftReport = shiftReportService.startShift(bakeryId, shift);
+        return ResponseEntity.ok(shiftReport);
     }
 
-    @PostMapping("/end")
-    public ShiftReportDto recordShiftEndInventory(@RequestBody ShiftEndInventoryReportRequest request){
-        return shiftReportService.recordShiftEndInventory(request);
+    @PutMapping("/{shiftReportId}/save")
+    public ResponseEntity<ShiftReport> saveShift(@PathVariable Long shiftReportId,
+                                                 @RequestBody List<ShiftReportProductUpdateRequest> updates) {
+        ShiftReport shiftReport = shiftReportService.saveShift(shiftReportId, updates);
+        return ResponseEntity.ok(shiftReport);
     }
 
-    @GetMapping("/{id}")
-    public ShiftReportDto getById(@PathVariable Long id){
-        return shiftReportService.getById(id);
+    @PostMapping("/{id}/generate-report")
+    public ShiftReportSummary generateShiftReport(@PathVariable Long id) {
+        return shiftReportService.generateShiftReport(id);
     }
 
-    @GetMapping("/filter")
-    public List<ShiftReportDto> getAllByBakeryIdAndProductIdAndShiftId(@RequestParam Long bakeryId,
-                                                                       @RequestParam Long productId,
-                                                                       @RequestParam String shiftId) {
-        return shiftReportService.getAllByBakeryIdAndProductIdAndShiftId(bakeryId, productId, shiftId);
-    }
-
-    @GetMapping("/bakery/{bakeryId}")
-    public ResponseEntity<Page<ShiftReportDto>> getAllShiftsByBakeryId(@PathVariable Long bakeryId,
-                                                                       PageRequest pageRequest) {
-        Page<ShiftReportDto> shiftReports = shiftReportService.getAllShiftsByBakeryId(bakeryId, pageRequest);
-        return ResponseEntity.ok(shiftReports);
-    }
-
-    @PutMapping("/{id}/update")
-    public ShiftReportDto updateShiftReportQuantities(@PathVariable Long id,
-                                                      @RequestParam Integer producedQuantity,
-                                                      @RequestParam Integer leftQuantity) {
-        return shiftReportService.updateShiftReportQuantities(id, producedQuantity, leftQuantity);
+    @GetMapping("/reports")
+    public List<ShiftReportSummary> getAllReports() {
+        return shiftReportService.getAllReports();
     }
 }

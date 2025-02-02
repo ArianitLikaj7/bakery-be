@@ -13,21 +13,4 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ShiftReportRepository extends JpaRepository<ShiftReport, Long> {
-
-    Boolean existsByProductIdAndReportDateAndShift(Long productId,
-                                                   LocalDate reportDate,
-                                                   Shift shift);
-
-    @Query(value = "select * from shift_report" +
-            " where bakery_id = :bakeryId" +
-            " and product_id = :productId" +
-            " and shift = :shiftId",
-            nativeQuery = true)
-    List<ShiftReport> findAllByBakeryIdAndProductIdAndShiftId(Long bakeryId,
-                                                              Long productId,
-                                                              String shiftId);
-
-
-    @Query(value = "SELECT * FROM shift_report s WHERE s.bakery_id = :bakeryId", nativeQuery = true)
-    Page<ShiftReport> findAllByBakeryId(Long bakeryId, Pageable pageable);
 }

@@ -1,32 +1,29 @@
 package com.example.bakerybe.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+@Entity
+@Table(name = "shift_report")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "shift_report")
-@Entity
-public class ShiftReport extends BaseEntity{
+public class ShiftReport extends BaseEntity {
 
-    @Column(name = "report_date")
+    @Column(name = "report_date", nullable = false)
     private LocalDate reportDate;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "shift", nullable = false)
     private Shift shift;
-
-    @ManyToOne
-    @JoinColumn(name = "product_id", insertable = false, updatable = false)
-    private Product product;
-
-    @Column(name = "product_id")
-    private Long productId;
 
     @ManyToOne
     @JoinColumn(name = "bakery_id", insertable = false, updatable = false)
@@ -35,12 +32,12 @@ public class ShiftReport extends BaseEntity{
     @Column(name = "bakery_id")
     private Long bakeryId;
 
-    @Column(name = "produced_quantity")
-    private Integer producedQuantity;
+    @OneToMany(mappedBy = "shiftReport", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<ShiftReportProduct> shiftReportProducts = new ArrayList<>();
 
-    @Column(name = "left_quantity")
-    private Integer leftQuantity;
 
-    @Column(name = "daily_earnings")
-    private BigDecimal dailyEarnings;
+
+
+
 }
