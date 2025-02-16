@@ -21,7 +21,7 @@ public class ShiftReportProduct extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "shift_report_id", insertable = false, updatable = false)
-    @JsonBackReference
+    @JsonIgnore
     private ShiftReport shiftReport;
 
     @Column(name = "product_id", nullable = false)

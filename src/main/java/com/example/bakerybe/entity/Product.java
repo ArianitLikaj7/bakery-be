@@ -1,5 +1,6 @@
 package com.example.bakerybe.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,7 +25,7 @@ public class Product extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "bakery_id", insertable = false, updatable = false)
-    @JsonManagedReference
+    @JsonIgnore
     private Bakery bakery;
 }
 

@@ -1,5 +1,6 @@
 package com.example.bakerybe.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -33,11 +34,11 @@ public class ShiftReport extends BaseEntity {
     private Long bakeryId;
 
     @OneToMany(mappedBy = "shiftReport", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonIgnore
     private List<ShiftReportProduct> shiftReportProducts = new ArrayList<>();
 
 
-
-
-
+    public ShiftReport(Long id, LocalDate reportDate, Shift shift, Bakery bakery, Long bakeryId, Object o) {
+        super();
+    }
 }

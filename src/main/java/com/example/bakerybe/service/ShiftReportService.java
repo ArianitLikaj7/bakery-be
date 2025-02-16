@@ -4,21 +4,26 @@ import com.example.bakerybe.dao.ProductRepository;
 import com.example.bakerybe.dao.ShiftReportProductRepository;
 import com.example.bakerybe.dao.ShiftReportRepository;
 import com.example.bakerybe.dao.ShiftReportSummaryRepository;
-import com.example.bakerybe.dto.*;
+import com.example.bakerybe.dto.ShiftReportProductSummaryDto;
+import com.example.bakerybe.dto.ShiftReportProductUpdateRequest;
+import com.example.bakerybe.dto.ShiftReportResponse;
+import com.example.bakerybe.dto.ShiftReportSummaryDto;
 import com.example.bakerybe.entity.*;
 import com.example.bakerybe.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ShiftReportService {
 
     private final ShiftReportRepository shiftReportRepository;
@@ -28,7 +33,7 @@ public class ShiftReportService {
     private final CustomUserService customUserService;
 
     @Transactional
-    public ShiftReport startShift(Long bakeryId, Shift shift) {
+    public ShiftReportResponse createShift(Long bakeryId, Shift shift) {
         ShiftReport shiftReport = ShiftReport.builder()
                 .reportDate(LocalDate.now())
                 .shift(shift)
@@ -36,80 +41,54 @@ public class ShiftReportService {
                 .build();
 
         shiftReport = shiftReportRepository.save(shiftReport);
+        log.info("Creating ShiftReport: bakeryId={}, shift={}, reportDate={}, shiftReportId={}",
+                bakeryId, shift, LocalDate.now(), shiftReport.getId());
 
         List<Product> products = productRepository.findProductsByBakeryId(bakeryId);
 
-        ShiftReport finalShiftReport = shiftReport;
-        List<ShiftReportProduct> reportProducts = products.stream()
-                .map(product -> ShiftReportProduct.builder()
-                        .shiftReportId(finalShiftReport.getId())
-                        .productId(product.getId())
-                        .producedQuantity(0)
-                        .leftQuantity(0)
-                        .dailyEarnings(BigDecimal.ZERO)
-                        .build())
-                .toList();
-
-        shiftReportProductRepository.saveAll(reportProducts);
-
-        List<ShiftReportProduct> shiftProducts = shiftReportProductRepository.findByShiftReportId(shiftReport.getId());
-        shiftReport.setShiftReportProducts(shiftProducts);
-
-        return shiftReport;
+        return new ShiftReportResponse(shiftReport.getId(), products);
     }
 
 
     @Transactional
-    public ShiftReport saveShift(Long shiftReportId, List<ShiftReportProductUpdateRequest> updates) {
+    public Long saveShift(Long shiftReportId, List<ShiftReportProductUpdateRequest> updates) {
         ShiftReport shiftReport = shiftReportRepository.findById(shiftReportId)
                 .orElseThrow(() -> new ResourceNotFoundException("ShiftReport not found"));
 
-        // Sigurohemi që lista nuk është null
-        if (shiftReport.getShiftReportProducts() == null) {
-            shiftReport.setShiftReportProducts(new ArrayList<>());
-        }
-
         for (ShiftReportProductUpdateRequest update : updates) {
-            ShiftReportProduct product = shiftReport.getShiftReportProducts().stream()
-                    .filter(p -> p.getProduct().getId().equals(update.getProductId()))
-                    .findFirst()
+            ShiftReportProduct product = shiftReportProductRepository
+                    .findByShiftReportIdAndProductId(shiftReportId, update.getProductId())
                     .orElse(null);
 
             if (product == null) {
-                // Krijo një entitet të ri nëse nuk ekziston
-                product = new ShiftReportProduct();
-                product.setShiftReport(shiftReport);
-                product.setProduct(productRepository.findById(update.getProductId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Product not found")));
-                shiftReport.getShiftReportProducts().add(product);
+                product = ShiftReportProduct.builder()
+                        .shiftReportId(shiftReportId)
+                        .productId(update.getProductId())
+                        .producedQuantity(update.getProducedQuantity())
+                        .leftQuantity(update.getLeftQuantity())
+                        .dailyEarnings(BigDecimal.ZERO)
+                        .build();
+            } else {
+                product.setProducedQuantity(update.getProducedQuantity());
+                product.setLeftQuantity(update.getLeftQuantity());
             }
-
-            // Përditëso vlerat
-            product.setProducedQuantity(product.getProducedQuantity() + update.getProducedQuantity());
-            product.setLeftQuantity(product.getLeftQuantity() + update.getLeftQuantity());
-            product.setDailyEarnings(product.getDailyEarnings().add(update.getDailyEarnings()));
+            shiftReportProductRepository.save(product);
         }
 
-        return shiftReport;
+        return shiftReport.getId();
     }
 
-
-
-
-
-
     @Transactional
-    public ShiftReportSummary generateShiftReport(Long shiftReportId) {
+    public ShiftReportSummaryDto generateShiftReport(Long shiftReportId) {
         ShiftReport shiftReport = shiftReportRepository.findById(shiftReportId)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        String.format("ShiftReport with id %s not found", shiftReportId)));
+                .orElseThrow(() -> new ResourceNotFoundException("ShiftReport not found"));
 
-        List<ShiftReportProduct> reportProducts = shiftReportProductRepository.findShiftReportProductByShiftReportId(shiftReportId);
+        List<ShiftReportProduct> reportProducts = shiftReportProductRepository
+                .findShiftReportProductByShiftReportId(shiftReportId);
 
-        BigDecimal totalDailyEarnings = BigDecimal.ZERO;
-        List<ShiftReportProductSummary> productSummaries = new ArrayList<>();
+        AtomicReference<BigDecimal> totalDailyEarnings = new AtomicReference<>(BigDecimal.ZERO);
 
-        for (ShiftReportProduct product : reportProducts) {
+        List<ShiftReportProductSummaryDto> productSummaries = reportProducts.stream().map(product -> {
             BigDecimal productPrice = product.getProduct().getPrice();
             BigDecimal producedQuantity = BigDecimal.valueOf(product.getProducedQuantity());
             BigDecimal leftQuantity = BigDecimal.valueOf(product.getLeftQuantity());
@@ -117,34 +96,23 @@ public class ShiftReportService {
             BigDecimal productProfit = producedQuantity.multiply(productPrice)
                     .subtract(leftQuantity.multiply(productPrice));
 
-            totalDailyEarnings = totalDailyEarnings.add(productProfit);
+            totalDailyEarnings.updateAndGet(current -> current.add(productProfit));
 
-            ShiftReportProductSummary productSummary = ShiftReportProductSummary.builder()
-                    .productName(product.getProduct().getName())
-                    .producedQuantity(product.getProducedQuantity())
-                    .leftQuantity(product.getLeftQuantity())
-                    .productPrice(productPrice)
-                    .productProfit(productProfit)
-                    .build();
+            return new ShiftReportProductSummaryDto(
+                    product.getProduct().getName(),
+                    product.getProducedQuantity(),
+                    product.getLeftQuantity(),
+                    productPrice,
+                    productProfit
+            );
+        }).collect(Collectors.toList());
 
-            productSummaries.add(productSummary);
-        }
-
-        ShiftReportSummary shiftReportSummary = ShiftReportSummary.builder()
-                .reportDate(shiftReport.getReportDate())
-                .shift(shiftReport.getShift())
-                .totalDailyEarnings(totalDailyEarnings)
-                .productSummaries(productSummaries)
-                .createdBy(customUserService.getCurrentUser().getId())
-                .build();
-
-        ShiftReportSummary savedReport = shiftReportSummaryRepository.save(shiftReportSummary);
-        productSummaries.forEach(p -> p.setShiftReportSummary(savedReport));
-        return savedReport;
-    }
-
-    public List<ShiftReportSummary> getAllReports() {
-        return shiftReportSummaryRepository.findAll();
+        return new ShiftReportSummaryDto(
+                shiftReport.getReportDate(),
+                shiftReport.getShift(),
+                productSummaries,
+                totalDailyEarnings.get()
+        );
     }
 
 }
