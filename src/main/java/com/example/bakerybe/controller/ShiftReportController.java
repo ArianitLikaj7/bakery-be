@@ -3,9 +3,7 @@ package com.example.bakerybe.controller;
 import com.example.bakerybe.dto.ShiftReportProductUpdateRequest;
 import com.example.bakerybe.dto.ShiftReportResponse;
 import com.example.bakerybe.dto.ShiftReportSummaryDto;
-import com.example.bakerybe.entity.Product;
 import com.example.bakerybe.entity.Shift;
-import com.example.bakerybe.entity.ShiftReport;
 import com.example.bakerybe.service.ShiftReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -36,4 +34,10 @@ public class ShiftReportController {
     public ResponseEntity<ShiftReportSummaryDto> generateShiftReport(@PathVariable Long shiftReportId) {
         return ResponseEntity.ok(shiftReportService.generateShiftReport(shiftReportId));
     }
+
+    @GetMapping("/admin/all")
+    public ResponseEntity<List<ShiftReportSummaryDto>> getAllShiftReports() {
+        return ResponseEntity.ok(shiftReportService.getAllShiftReports());
+    }
+
 }

@@ -15,4 +15,5 @@ import java.util.List;
 
 @Repository
 public interface ShiftReportRepository extends JpaRepository<ShiftReport, Long> {
+    List<ShiftReport> findAllByOrderByReportDateDesc();
 }

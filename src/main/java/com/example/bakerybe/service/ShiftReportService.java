@@ -115,4 +115,41 @@ public class ShiftReportService {
         );
     }
 
+    public List<ShiftReportSummaryDto> getAllShiftReports() {
+        List<ShiftReport> reports = shiftReportRepository.findAllByOrderByReportDateDesc();
+
+        return reports.stream().map(shiftReport -> {
+            List<ShiftReportProduct> reportProducts =
+                    shiftReportProductRepository.findShiftReportProductByShiftReportId(shiftReport.getId());
+
+            AtomicReference<BigDecimal> totalDailyEarnings = new AtomicReference<>(BigDecimal.ZERO);
+
+            List<ShiftReportProductSummaryDto> productSummaries = reportProducts.stream().map(product -> {
+                BigDecimal productPrice = product.getProduct().getPrice();
+                BigDecimal producedQuantity = BigDecimal.valueOf(product.getProducedQuantity());
+                BigDecimal leftQuantity = BigDecimal.valueOf(product.getLeftQuantity());
+
+                BigDecimal productProfit = producedQuantity.multiply(productPrice)
+                        .subtract(leftQuantity.multiply(productPrice));
+
+                totalDailyEarnings.updateAndGet(current -> current.add(productProfit));
+
+                return new ShiftReportProductSummaryDto(
+                        product.getProduct().getName(),
+                        product.getProducedQuantity(),
+                        product.getLeftQuantity(),
+                        productPrice,
+                        productProfit
+                );
+            }).collect(Collectors.toList());
+
+            return new ShiftReportSummaryDto(
+                    shiftReport.getReportDate(),
+                    shiftReport.getShift(),
+                    productSummaries,
+                    totalDailyEarnings.get()
+            );
+        }).toList();
+    }
+
 }
