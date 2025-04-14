@@ -15,7 +15,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ShiftReportSummaryDto {
-    private Long id;
     private LocalDate reportDate;
     private Shift shift;
     private List<ShiftReportProductSummaryDto> productSummaries;
