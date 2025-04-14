@@ -108,6 +108,7 @@ public class ShiftReportService {
         }).collect(Collectors.toList());
 
         return new ShiftReportSummaryDto(
+                shiftReport.getId(),
                 shiftReport.getReportDate(),
                 shiftReport.getShift(),
                 productSummaries,
@@ -144,6 +145,7 @@ public class ShiftReportService {
             }).collect(Collectors.toList());
 
             return new ShiftReportSummaryDto(
+                    shiftReport.getId(),
                     shiftReport.getReportDate(),
                     shiftReport.getShift(),
                     productSummaries,
