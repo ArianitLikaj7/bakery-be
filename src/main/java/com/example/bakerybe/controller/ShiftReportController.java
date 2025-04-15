@@ -35,9 +35,9 @@ public class ShiftReportController {
         return ResponseEntity.ok(shiftReportService.generateShiftReport(shiftReportId));
     }
 
-    @GetMapping("/admin/all")
-    public ResponseEntity<List<ShiftReportSummaryDto>> getAllShiftReports() {
-        return ResponseEntity.ok(shiftReportService.getAllShiftReports());
+    @GetMapping("/admin/all/{bakeryId}")
+    public ResponseEntity<List<ShiftReportSummaryDto>> getAllShiftReports(@PathVariable Long bakeryId) {
+        return ResponseEntity.ok(shiftReportService.getAllShiftReports(bakeryId));
     }
 
 }

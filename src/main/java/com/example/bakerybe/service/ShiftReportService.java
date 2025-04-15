@@ -108,6 +108,7 @@ public class ShiftReportService {
         }).collect(Collectors.toList());
 
         return new ShiftReportSummaryDto(
+                shiftReport.getId(),
                 shiftReport.getReportDate(),
                 shiftReport.getShift(),
                 productSummaries,
@@ -115,8 +116,8 @@ public class ShiftReportService {
         );
     }
 
-    public List<ShiftReportSummaryDto> getAllShiftReports() {
-        List<ShiftReport> reports = shiftReportRepository.findAllByOrderByReportDateDesc();
+    public List<ShiftReportSummaryDto> getAllShiftReports(Long bakeryId) {
+        List<ShiftReport> reports = shiftReportRepository.findByBakeryIdOrderByReportDateDesc(bakeryId);
 
         return reports.stream().map(shiftReport -> {
             List<ShiftReportProduct> reportProducts =
@@ -144,6 +145,7 @@ public class ShiftReportService {
             }).collect(Collectors.toList());
 
             return new ShiftReportSummaryDto(
+                    shiftReport.getId(),
                     shiftReport.getReportDate(),
                     shiftReport.getShift(),
                     productSummaries,
