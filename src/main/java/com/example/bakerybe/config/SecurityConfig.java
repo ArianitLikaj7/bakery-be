@@ -56,7 +56,8 @@ public class SecurityConfig {
                 "/v3/api-docs.yaml",
                 "/swagger-ui.html",
                 "/swagger-ui/**",
-                "/api/v1/shift-reports/filter"
+                "/api/v1/shift-reports/filter",
+                "/internal/**"
         };
     }
 
